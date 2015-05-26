@@ -1,0 +1,10 @@
+{
+  "firebase": "gdg-checkin",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "node_modules",
+    "docs"
+  ]
+}

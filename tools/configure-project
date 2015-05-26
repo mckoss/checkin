@@ -1,0 +1,9 @@
+#!/bin/bash
+# configure-project --- Configure the dependencies of this repo.
+set -e
+
+cd $PROJ_DIR
+npm install
+bower install
+
+npm list --depth=0

@@ -1,0 +1,20 @@
+{
+  "name": "gdg-checkin",
+  "version": "0.0.0",
+  "authors": [
+    "Mike Koss <koss@google.com>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "qunit": "~1.17.1",
+    "firebase": "~2.2.5"
+  }
+}
