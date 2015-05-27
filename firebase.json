@@ -1,8 +1,10 @@
 {
   "firebase": "gdg-checkin",
   "public": ".",
+  "rules": "rules.json",
   "ignore": [
     "firebase.json",
+    "rules.json",
     "**/.*",
     "node_modules",
     "docs"

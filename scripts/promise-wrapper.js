@@ -19,7 +19,7 @@ namespace.module("promise-wrapper", function (exports, require) {
       return Promise.all(args).then(function (values) {
         return fn.apply(undefined, values);
       });
-    }
+    };
   }
 
   // wrapCallback converts callback based function to promise
@@ -40,15 +40,21 @@ namespace.module("promise-wrapper", function (exports, require) {
           fn.apply(undefined, values);
         });
       });
-    }
+    };
   }
 
   // Helper to make Promise version of XHR.
-  function get(url) {
+  function get(url, headers) {
     return new Promise(function(resolve, reject) {
       var req = new XMLHttpRequest();
 
       req.open('GET', url);
+
+      if (headers) {
+        for (var key in headers) {
+          req.setRequestHeader(key, headers[key]);
+        }
+      }
 
       req.onload = function() {
         var result;
