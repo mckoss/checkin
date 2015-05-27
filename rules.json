@@ -5,6 +5,15 @@
         ".read": true,
         ".write": "auth.uid == $userid"
       }
+    },
+
+    "events": {
+      "$id": {
+        ".read": true,
+        ".write": "auth.uid == newData.child('owner').val() &&
+                  (data.child('owner').val() == null || data.child('owner').val() == auth.uid)"
+      },
+      ".indexOn": ["owner"]
     }
   }
 }

@@ -20,15 +20,24 @@ namespace.module('gdg-checkin', function(exports, require) {
 
   function init() {
     app = new CheckinApp();
+
     document.querySelector('#checkin-button')
       .addEventListener('click', app.onCheckin.bind(app));
     document.querySelector('#logout-button')
       .addEventListener('click', app.onLogout.bind(app));
+
+    var eventTitle = document.querySelector('#event-title');
+    var eventId = document.querySelector('#event-id');
+    document.querySelector('#new-event-button')
+      .addEventListener('click', function() {
+        app.onNewEvent(eventId.value, eventTitle.value);
+      });
   }
 
   function CheckinApp() {
     this.root = new Firebase(ROOT);
-    this.users = this.root.child("users");
+    this.users = this.root.child('users');
+    this.events = this.root.child('events');
 
     this.authPromise = authPromise(this.root);
     this.authPromise.then(function(auth) {
@@ -79,6 +88,13 @@ namespace.module('gdg-checkin', function(exports, require) {
 
     onLogout: function() {
       this.root.unauth();
+    },
+
+    onNewEvent: function(eventId, eventTitle) {
+      this.events.child(eventId).set({
+        owner: this.profile.uid,
+        title: eventTitle
+      });
     },
 
     ready: function() {
