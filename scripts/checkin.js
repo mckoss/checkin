@@ -50,7 +50,7 @@ namespace.module('gdg-checkin', function(exports, require) {
         console.log("Auth Error: " + error);
       }
       this.root.authWithOAuthRedirect('google', errorHandler, {
-        scope: "https://www.googleapis.com/auth/plus.login,email"
+        scope: "profile,email"
       });
     },
 
@@ -65,7 +65,7 @@ namespace.module('gdg-checkin', function(exports, require) {
           name: result.displayName,
           email: auth.google.email,
           plusId: auth.google.id,
-          quote: result.braggingRights,
+          quote: result.braggingRights || "",
           image: resize(result.image.url, IMAGE_SIZE)
         };
       });
