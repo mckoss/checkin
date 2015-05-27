@@ -21,8 +21,8 @@ namespace.module('gdg-checkin', function(exports, require) {
   function init() {
     app = new CheckinApp();
 
-    document.querySelector('#checkin-button')
-      .addEventListener('click', app.onCheckin.bind(app));
+    document.querySelector('#login-button')
+      .addEventListener('click', app.onLogin.bind(app));
     document.querySelector('#logout-button')
       .addEventListener('click', app.onLogout.bind(app));
 
@@ -32,12 +32,18 @@ namespace.module('gdg-checkin', function(exports, require) {
       .addEventListener('click', function() {
         app.onNewEvent(eventId.value, eventTitle.value);
       });
+
+    document.querySelector('#checkin-button')
+      .addEventListener('click', function() {
+        app.onCheckin(eventId.value);
+      });
   }
 
   function CheckinApp() {
     this.root = new Firebase(ROOT);
     this.users = this.root.child('users');
     this.events = this.root.child('events');
+    this.checkins = this.root.child('checkins');
 
     this.authPromise = authPromise(this.root);
     this.authPromise.then(function(auth) {
@@ -50,8 +56,8 @@ namespace.module('gdg-checkin', function(exports, require) {
   }
 
   CheckinApp.methods({
-    onCheckin: function() {
-      console.log("Checking in...");
+    onLogin: function() {
+      console.log("Logging in...");
       function errorHandler(error) {
         if (!error) {
           return;
@@ -91,9 +97,18 @@ namespace.module('gdg-checkin', function(exports, require) {
     },
 
     onNewEvent: function(eventId, eventTitle) {
+      console.log("Writing event: " + eventId);
       this.events.child(eventId).set({
         owner: this.profile.uid,
         title: eventTitle
+      });
+    },
+
+    onCheckin: function(eventId) {
+      console.log("Checking in: " + eventId);
+      this.checkins.push({
+        eid: eventId,
+        uid: this.profile.uid
       });
     },
 

@@ -8,12 +8,22 @@
     },
 
     "events": {
-      "$id": {
-        ".read": true,
+      ".read": true,
+      ".indexOn": ["owner"],
+      "$eid": {
         ".write": "auth.uid == newData.child('owner').val() &&
-                  (data.child('owner').val() == null || data.child('owner').val() == auth.uid)"
-      },
-      ".indexOn": ["owner"]
+                  (data.val() == null || data.child('owner').val() == auth.uid)"
+      }
+    },
+
+    "checkins": {
+      ".read": true,
+      ".indexOn": ["eid", "uid"],
+      "$cid": {
+        ".write": "data.val() == null &&
+                   auth.uid == newData.child('uid').val() &&
+                   root.child('events').child(newData.child('eid').val()).val() != null"
+      }
     }
   }
 }
