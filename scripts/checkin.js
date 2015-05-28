@@ -41,12 +41,20 @@ namespace.module('gdg-checkin', function(exports, require) {
     setInterval(checkAnchor, 500);
   }
 
-  var lastAnchor = "";
+  var lastAnchor;
   function checkAnchor() {
     var hash = window.location.hash.slice(1);
-    if (hash != lastAnchor) {
+    var checkinsDiv = document.querySelector('#checkins');
+    if (hash !== lastAnchor) {
       lastAnchor = hash;
-      app.showEvent(lastAnchor, document.querySelector('#checkins'));
+      if (lastAnchor) {
+        document.body.className = "event";
+        app.showEvent(lastAnchor, checkinsDiv);
+        app.ensureLogin();
+        return;
+      }
+      checkinsDiv.innerHTML = '';
+      document.body.className = "main";
     }
   }
 
@@ -78,6 +86,12 @@ namespace.module('gdg-checkin', function(exports, require) {
       this.root.authWithOAuthRedirect('google', errorHandler, {
         scope: "profile,email"
       });
+    },
+
+    ensureLogin: function() {
+      if (!this.profile) {
+        this.onLogin();
+      }
     },
 
     profileFromAuth: function(auth) {
@@ -117,8 +131,12 @@ namespace.module('gdg-checkin', function(exports, require) {
 
     onCheckin: function(eventId) {
       console.log("Checking in: " + eventId);
+      if (!this.profile) {
+        alert("Not yet signed in.");
+        return;
+      }
       this.checkins.push({
-        eid: eventId,
+        eid: this.eventId,
         uid: this.profile.uid
       });
     },
@@ -129,6 +147,7 @@ namespace.module('gdg-checkin', function(exports, require) {
       if (this.lastEventHandler) {
         this.checkins.off("child_added", this.lastEventHandler);
       }
+      this.eventId = eventId;
       this.checkinsDiv = div;
       this.checkinsDiv.innerHTML = "";
       this.lastEventHandler = this.checkins

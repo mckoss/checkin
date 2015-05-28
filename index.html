@@ -9,14 +9,20 @@
   <script src="/scripts/checkin.js"></script>
 </head>
 <body>
-  <p>Check in to event.</p>
-  <button id="login-button">Log In</button>
-  <button id="logout-button">Log out</button>
-  <p>Title: <input type="text" id="event-title"></input></p>
-  <p>Event ID: <input type="text" id="event-id"></input></p>
-  <button id="new-event-button">Create Event</button>
-  <button id="checkin-button">Check In</button>
-  <div id="last-checkin"></div>
-  <div id="checkins"></div>
+  <div class="main-only">
+    <p>Create an event.</p>
+    <button id="login-button">Log In</button>
+    <button id="logout-button">Log out</button>
+    <p>Title: <input type="text" id="event-title"></input></p>
+    <p>Event ID: <input type="text" id="event-id"></input></p>
+    <button id="new-event-button">Create Event</button>
+  </div>
+  <div class="event-only">
+    <h1 id="event-name"></h1>
+    <button id="checkin-button">Check In</button>
+    <div id="last-checkin"></div>
+    <h2>Checkins</h2>
+    <div id="checkins"></div>
+  </div>
 </body>
 </html>
