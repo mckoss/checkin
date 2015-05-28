@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>GDG Checkin</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="/styles/main.css">
   <script src="https://cdn.firebase.com/js/client/2.2.5/firebase.js"></script>
   <script src="/scripts/namespace-plus.js"></script>
@@ -18,7 +20,7 @@
     <button id="new-event-button">Create Event</button>
   </div>
   <div class="event-only">
-    <h1 id="event-name"></h1>
+    <h1 id="event-heading">Event</h1>
     <button id="checkin-button">Check In</button>
     <div id="last-checkin"></div>
     <h2>Checkins</h2>

@@ -45,11 +45,12 @@ namespace.module('gdg-checkin', function(exports, require) {
   function checkAnchor() {
     var hash = window.location.hash.slice(1);
     var checkinsDiv = document.querySelector('#checkins');
+    var titleElement = document.querySelector('#event-heading');
     if (hash !== lastAnchor) {
       lastAnchor = hash;
       if (lastAnchor) {
         document.body.className = "event";
-        app.showEvent(lastAnchor, checkinsDiv);
+        app.showEvent(lastAnchor, titleElement, checkinsDiv);
         app.ensureLogin();
         return;
       }
@@ -141,14 +142,18 @@ namespace.module('gdg-checkin', function(exports, require) {
       });
     },
 
-    showEvent: function(eventId, div) {
+    showEvent: function(eventId, titleElement, checkinsDiv) {
       var self = this;
       console.log("Showing checkins for " + eventId);
       if (this.lastEventHandler) {
         this.checkins.off("child_added", this.lastEventHandler);
       }
       this.eventId = eventId;
-      this.checkinsDiv = div;
+      this.events.child(eventId).once("value", function(snapshot) {
+        var event = snapshot.val();
+        titleElement.textContent = event.title;
+      });
+      this.checkinsDiv = checkinsDiv;
       this.checkinsDiv.innerHTML = "";
       this.lastEventHandler = this.checkins
         .orderByChild("eid").equalTo(eventId).on("child_added", function(snapshot) {
