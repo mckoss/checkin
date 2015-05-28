@@ -37,6 +37,17 @@ namespace.module('gdg-checkin', function(exports, require) {
       .addEventListener('click', function() {
         app.onCheckin(eventId.value);
       });
+
+    setInterval(checkAnchor, 500);
+  }
+
+  var lastAnchor = "";
+  function checkAnchor() {
+    var hash = window.location.hash.slice(1);
+    if (hash != lastAnchor) {
+      lastAnchor = hash;
+      app.showEvent(lastAnchor, document.querySelector('#checkins'));
+    }
   }
 
   function CheckinApp() {
@@ -110,6 +121,32 @@ namespace.module('gdg-checkin', function(exports, require) {
         eid: eventId,
         uid: this.profile.uid
       });
+    },
+
+    showEvent: function(eventId, div) {
+      var self = this;
+      console.log("Showing checkins for " + eventId);
+      if (this.lastEventHandler) {
+        this.checkins.off("child_added", this.lastEventHandler);
+      }
+      this.checkinsDiv = div;
+      this.checkinsDiv.innerHTML = "";
+      this.lastEventHandler = this.checkins
+        .orderByChild("eid").equalTo(eventId).on("child_added", function(snapshot) {
+          var checkin = snapshot.val();
+          self.users.child(checkin.uid).once("value", function(snapshot) {
+            var profile = snapshot.val();
+            self.onUserCheckin(profile);
+          });
+        });
+    },
+
+    onUserCheckin: function(profile) {
+      console.log("User Checkin: ", profile);
+      var root = document.createElement('div');
+      root.className = 'attendee';
+      root.innerHTML = '<img src="' + profile.image + '"><br>' + profile.name;
+      this.checkinsDiv.appendChild(root);
     },
 
     ready: function() {
