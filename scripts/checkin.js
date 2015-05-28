@@ -51,7 +51,6 @@ namespace.module('gdg-checkin', function(exports, require) {
       if (lastAnchor) {
         document.body.className = "event";
         app.showEvent(lastAnchor, titleElement, checkinsDiv);
-        app.ensureLogin();
         return;
       }
       checkinsDiv.innerHTML = '';
@@ -87,12 +86,6 @@ namespace.module('gdg-checkin', function(exports, require) {
       this.root.authWithOAuthRedirect('google', errorHandler, {
         scope: "profile,email"
       });
-    },
-
-    ensureLogin: function() {
-      if (!this.profile) {
-        this.onLogin();
-      }
     },
 
     profileFromAuth: function(auth) {
@@ -131,6 +124,11 @@ namespace.module('gdg-checkin', function(exports, require) {
     },
 
     onCheckin: function(eventId) {
+      if (!this.profile) {
+        this.onLogin();
+        return;
+      }
+
       console.log("Checking in: " + eventId);
       if (!this.profile) {
         alert("Not yet signed in.");
@@ -170,7 +168,7 @@ namespace.module('gdg-checkin', function(exports, require) {
       var root = document.createElement('div');
       root.className = 'attendee';
       root.innerHTML = '<img src="' + profile.image + '"><br>' + profile.name;
-      this.checkinsDiv.appendChild(root);
+      prependChild(this.checkinsDiv, root);
     },
 
     ready: function() {
@@ -178,6 +176,10 @@ namespace.module('gdg-checkin', function(exports, require) {
     }
 
   }); // CheckinApp.methods
+
+  function prependChild(parent, newElement) {
+    parent.insertBefore(newElement, parent.firstChild);
+  }
 
   // Return a comparison function on (asc) property of args
   function compareProp(propName) {
